@@ -8,5 +8,6 @@ module Sensu
 
     # Process signals that trigger a Sensu process stop.
     STOP_SIGNALS = %w[INT TERM]
+    RELOAD_SIGNALS = %w[HUP]
   end
 end

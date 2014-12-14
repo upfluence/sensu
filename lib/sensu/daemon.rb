@@ -154,7 +154,7 @@ module Sensu
     # context of `trap()`.
     def setup_signal_traps
       @signals = []
-      STOP_SIGNALS.each do |signal|
+      (STOP_SIGNALS + RELOAD_SIGNALS).each do |signal|
         Signal.trap(signal) do
           @signals << signal
         end
@@ -164,6 +164,13 @@ module Sensu
         if STOP_SIGNALS.include?(signal)
           @logger.warn("received signal", :signal => signal)
           stop
+        elsif RELOAD_SIGNALS.include?(signal)
+          @logger.warn('received signal', {
+            :signal => signal
+          })
+          pause
+          reload_settings
+          resume
         end
       end
     end
@@ -261,7 +268,6 @@ module Sensu
         @logger.fatal("SENSU NOT RUNNING!")
         exit 2
       end
-      Signal.trap("SIGHUP", "IGNORE")
       exit if Kernel.fork
       Dir.chdir("/")
       ObjectSpace.each_object(IO) do |io|
