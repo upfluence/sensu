@@ -935,11 +935,38 @@ module Sensu
         @state = :running
       end
 
+      def process_internal_check(name, status, message)
+        process_check_result(
+          client: "sensu-server",
+          check: {
+            name: "sensu-server-#{name}",
+            issued: Time.now.to_i,
+            output: message,
+            status: status,
+            executed: Time.now.to_i
+          }
+        )
+      end
+
+      def setup_transport_check
+        @transport.before_reconnect do
+          @logger.warn("reconnecting to transport")
+          process_internal_check("transport", 2, "Can't reach the transport")
+        end
+
+        @transport.after_reconnect do
+          @logger.info("reconnected to transport")
+          process_internal_check("transport", 0, "Reconnected to the transport")
+          resume
+        end
+      end
+
       # Start the Sensu server process, connecting to Redis, the
       # transport, and calling the `bootstrap()` method.
       def start
         setup_redis
         setup_transport
+        setup_transport_check
         bootstrap
       end
 
