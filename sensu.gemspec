@@ -13,10 +13,9 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
   s.has_rdoc    = false
 
-  s.add_dependency "json" if RUBY_VERSION < "1.9"
   s.add_dependency "multi_json", "1.11.2"
   s.add_dependency "uuidtools", "2.1.5"
-  s.add_dependency "eventmachine", "1.0.8"
+  s.add_dependency "eventmachine"
   s.add_dependency "sensu-logger", "1.1.0"
   s.add_dependency "sensu-settings", "3.1.0"
   s.add_dependency "sensu-extension", "1.3.0"

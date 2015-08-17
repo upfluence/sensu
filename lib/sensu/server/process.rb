@@ -932,12 +932,13 @@ module Sensu
         setup_keepalives
         setup_results
         setup_leader_monitor
+        process_internal_check("transport", 0, "Connected to the transport")
         @state = :running
       end
 
       def process_internal_check(name, status, message)
         process_check_result(
-          client: "sensu-server",
+          client: ENV["SENSU_CLIENT_NAME"],
           check: {
             name: "sensu-server-#{name}",
             issued: Time.now.to_i,
