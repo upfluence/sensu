@@ -20,6 +20,15 @@ module Sensu
           puts VERSION
           exit
         end
+
+        opts.on("-e", "--etcd URL", "etcd url") do |url|
+          options[:etcd_url] = url
+        end
+
+        opts.on("-n", "--etcd-namespace", "etcd sensu namespace") do |namespace|
+          options[:etcd_namespace] = namespace
+        end
+
         opts.on("-c", "--config FILE", "Sensu JSON config FILE") do |file|
           options[:config_file] = file
         end
