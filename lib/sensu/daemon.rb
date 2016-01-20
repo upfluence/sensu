@@ -1,7 +1,7 @@
 require "rubygems"
 
 gem "multi_json", "1.11.2"
-gem "eventmachine", "1.0.8"
+gem "eventmachine"
 
 gem "sensu-logger", "1.1.0"
 gem "sensu-settings", "3.1.0"
