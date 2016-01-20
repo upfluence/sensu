@@ -115,7 +115,8 @@ module Sensu
             :user_agent => env["HTTP_USER_AGENT"],
             :request_method => env["REQUEST_METHOD"],
             :request_uri => env["REQUEST_URI"],
-            :request_body => env["rack.input"].read
+            :handler => env["sinatra.route"],
+            :response_code => response.status,
           })
           env["rack.input"].rewind
         end
@@ -260,8 +261,11 @@ module Sensu
         end
       end
 
-      before do
+      after do
         request_log_line
+      end
+
+      before do
         content_type "application/json"
         settings.cors.each do |header, value|
           headers["Access-Control-Allow-#{header}"] = value
