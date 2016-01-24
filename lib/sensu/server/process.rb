@@ -952,12 +952,19 @@ module Sensu
         @transport.before_reconnect do
           @logger.warn("reconnecting to transport")
           process_internal_check("transport", 2, "Can't reach the transport")
+          pause
         end
 
         @transport.after_reconnect do
           @logger.info("reconnected to transport")
           process_internal_check("transport", 0, "Reconnected to the transport")
           resume
+        end
+
+        @transport.on_error do |error|
+          process_internal_check("transport", 2, "Transport error: #{error.to_s}")
+          @logger.fatal("transport connection error", :error => error.to_s)
+          @transport.reconnect
         end
       end
 
